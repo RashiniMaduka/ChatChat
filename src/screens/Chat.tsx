@@ -1,18 +1,10 @@
-import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import ChatList from './Chat/ChatList';
+import ChatView from './Chat/ChatView';
+import AddChat from './Chat/AddChat';
 
-interface ChatProps {}
 
-const Chat = (props: ChatProps) => {
-  return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-    </View>
-  );
-};
-
-export default Chat;
-
-const styles = StyleSheet.create({
-  container: {}
-});
+export {
+  ChatList,
+  ChatView,
+  AddChat
+}

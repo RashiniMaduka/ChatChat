@@ -4,8 +4,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Login from './src/screens/Login';
 import Navigation from './src/navigation';
+import useCachedResources from './src/hooks/useCachedResources';
 
 export default function App() {
+  const isLoadingComplete = useCachedResources();
+
+  if(!isLoadingComplete){
+    return null;
+  }
   return (
     <SafeAreaProvider>
       <StatusBar backgroundColor='#eee'/>

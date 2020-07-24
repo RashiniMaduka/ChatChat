@@ -6,6 +6,7 @@ import { AuthParamList } from '../types';
 import { Container, Content, Grid, Row, Form, Item, Input,Label,Button } from 'native-base';
 import Layout from '../constants/Layout';
 import Color from '../constants/Color';
+import * as firebase from 'firebase';
 
 type LoginRouteProps = RouteProp<AuthParamList, 'Login'>
 type LoginNavigationProps = StackNavigationProp<AuthParamList, 'Login'>;
@@ -16,6 +17,13 @@ type prop = {
 }
 
 const Login = ({ route, navigation }: prop) => {
+    const [email,setEmail] = React.useState('')
+    const [pwd,setPWD] = React.useState('')
+
+    const login=()=>{
+        firebase.auth().signInWithEmailAndPassword(email,pwd)
+        .catch(err=>alert(err))
+    }
     return (
         <Container>
             <Content>
@@ -27,17 +35,25 @@ const Login = ({ route, navigation }: prop) => {
                         <Form style={{flex:1,justifyContent:"center", marginHorizontal:20}}>
                          
                          <Item stackedLabel last>
-                            <Label >Username</Label>
-                            <Input/>
+                            <Label >Email</Label>
+                            <Input
+                                onChangeText={txt=>setEmail(txt)}
+                                value={email}
+                            />
                          </Item>
                          <Item stackedLabel last>
                              <Label >Password</Label>
-                             <Input/>
+                             <Input
+                                onChangeText={txt=>setPWD(txt)}
+                                value={pwd}
+                             />
                          </Item>
                         </Form>
                         </Row>
                         <Row style={{ height: Layout.height * 0.2, backgroundColor: Color.TRANSPARENT }}>
-                        <Button style={{flex:1,marginHorizontal:75,borderRadius:20,justifyContent:"center"}}>
+                        <Button style={{flex:1,marginHorizontal:75,borderRadius:20,justifyContent:"center"}}
+                            onPress={()=>login()}
+                        >
                             <Text style={{color:Color.WHITE}}>Login</Text>
 
                         </Button>

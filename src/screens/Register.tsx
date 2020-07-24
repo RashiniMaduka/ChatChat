@@ -3,11 +3,48 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Container, Content, Grid, Row, Form, Item, Input, Label, Button, Picker, Icon } from 'native-base';
 import Layout from '../constants/Layout';
 import Color from '../constants/Color';
+import * as firebase from 'firebase';
 
 interface RegisterProps { }
 
 const Register = (props: RegisterProps) => {
-  const [gender, setGender] = React.useState('')
+  const [FName, setFName] = React.useState('')
+  const [LName, setLName] = React.useState('')
+  const [email, setEmail] = React.useState('')
+  const [phone, setPhone] = React.useState('')
+  const [pwd, setPWD] = React.useState('')
+  const [cpwd, setCPWD] = React.useState('')
+  const [gender, setGender] = React.useState('Male')
+
+  const register=()=>{
+
+    // if(pwd!==cpwd)
+    // {
+    //   return false;
+    // }
+    firebase.auth().createUserWithEmailAndPassword(email,pwd)
+    .then(()=>{
+      const user = firebase.auth().currentUser;
+      const token = user?.uid;
+      user?.updateProfile({
+        displayName:FName+" "+LName,
+        photoURL:''
+      })
+      const ref = firebase.database();
+      ref.ref('User/'+token+'/').set({
+        email:email,
+        fname:FName,
+        lname:LName,
+        phone:phone,
+        gender:gender,
+      }).catch(err=>alert(err))
+    })
+    .catch(err=>{
+      console.log(err);
+      alert(err)
+    });
+  }
+
   return (
     <Container>
       <Content>
@@ -19,17 +56,33 @@ const Register = (props: RegisterProps) => {
             <Form style={{ flex: 1, justifyContent: "center", marginHorizontal: 20 }}>
               <Item stackedLabel last>
                 <Label >FirstName</Label>
-                <Input />
+                <Input
+                  onChangeText={txt => { setFName(txt) }}
+                  value={FName}
+                />
               </Item>
               <Item stackedLabel last>
                 <Label >LastName</Label>
-                <Input />
+                <Input
+                  onChangeText={txt => setLName(txt)}
+                  value={LName}
+                />
               </Item>
               <Item stackedLabel last>
                 <Label > Email</Label>
-                <Input />
+                <Input
+                  onChangeText={txt => setEmail(txt)}
+                  value={email}
+                />
               </Item>
-              <Item picker style={{marginVertical:10}}>
+              <Item stackedLabel last>
+                <Label > PhoneNumber</Label>
+                <Input
+                  onChangeText={txt => setPhone(txt)}
+                  value={phone}
+                />
+              </Item>
+              <Item picker style={{ marginVertical: 10 }}>
                 <Picker
                   mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
@@ -40,18 +93,24 @@ const Register = (props: RegisterProps) => {
                   selectedValue={gender}
                   onValueChange={(value) => setGender(value)}
                 >
-                  <Picker.Item label="Male" value="key0" />
-                  <Picker.Item label="Female" value="key1" />
+                  <Picker.Item label="Male" value="Male" />
+                  <Picker.Item label="Female" value="Female" />
                 </Picker>
 
               </Item>
               <Item stackedLabel last>
                 <Label >Password</Label>
-                <Input multiline={false} secureTextEntry={true} />
+                <Input multiline={false} secureTextEntry={true}
+                  onChangeText={txt => setPWD(txt)}
+                  value={pwd}
+                />
               </Item>
               <Item stackedLabel last>
                 <Label >Confirm Password</Label>
-                <Input />
+                <Input secureTextEntry
+                  onChangeText={txt => setCPWD(txt)}
+                  value={cpwd}
+                />
               </Item>
 
 
@@ -60,10 +119,11 @@ const Register = (props: RegisterProps) => {
           </Row>
 
           <Row style={{ height: Layout.height * 0.1, backgroundColor: Color.TRANSPARENT }} >
-          <Button style={{flex:1,marginHorizontal:75,borderRadius:20,justifyContent:"center"}}>
-                            <Text style={{color:Color.WHITE}}>Register</Text>
-
-                        </Button>
+            <Button style={{ flex: 1, marginHorizontal: 75, borderRadius: 20, justifyContent: "center" }}
+              onPress={()=>register()}
+            >
+              <Text style={{ color: Color.WHITE }}>Register</Text>
+            </Button>
           </Row>
         </Grid>
       </Content>
