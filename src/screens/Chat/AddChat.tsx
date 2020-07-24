@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import * as firebase from 'firebase';
-import { User } from '../../types';
+import { User, Chat } from '../../types';
 import { Container, Content, List, Text, View, ListItem, Thumbnail, Left, Body, Right, Button } from 'native-base';
 import Color from '../../constants/Color';
 import Loading from '../Loading';
@@ -13,16 +13,18 @@ const AddChat = (props: AddChatProps) => {
   const ref = firebase.database();
   const [userList, setUserList] = React.useState<Array<User>>([])
   const [isLoading, setLoading] = React.useState<boolean>(true)
+
 React.useEffect(()=>{
   loadData()
 },[])
+
   const loadData = () =>{
     setLoading(true);
     ref.ref('/User/').once('value')
     .then((snapshot)=>{
       setUserList([]);
       const userData = snapshot.val()
-      let friends:Array<string> = [];
+      let friends:Array<string|undefined> = [];
       let myData:User = {};
       if(user?.uid){
         myData = userData[user?.uid]
@@ -35,12 +37,13 @@ React.useEffect(()=>{
       }
       if(friends.length!==0){
         friends.map((value,i)=>{
-          delete userData[value]
+          delete userData[value?value:""]
         })
       }
       for(let key in userData){
         if(key!==user.uid){
           let tempUser:User = userData[key];
+          tempUser.uid = key;
           setUserList(prevState=>[...prevState,tempUser])
           setLoading(false);
         }
@@ -51,6 +54,55 @@ React.useEffect(()=>{
       alert(error.message)
     })
   }
+
+  const add = (uid:string|undefined)=>{
+    setLoading(true)
+    console.log(uid);
+    ref.ref('/User/'+user?.uid+'/').once('value')
+    .then((snapshot)=>{
+      const mydata:User = snapshot.val();
+      let tempFriends = mydata.friends;
+      let chats = mydata.chats;
+      tempFriends = tempFriends?[...tempFriends,uid]:[uid];
+      const newChat:Chat = {
+        users:[user?.uid,uid],
+      }
+      const chatId = ref.ref('/Chat/').push(newChat)
+      
+      chats = chats?[...chats,chatId.key]:[chatId.key];
+
+      ref.ref('/User/'+uid+'/').once('value')
+      .then((snapshot)=>{
+        const data:User = snapshot.val();
+        const temp = data.friends?[...data.friends,user?.uid]:[user?.uid];
+        const chat = data.chats?[...data.chats,chatId.key]:[chatId.key];
+        data.friends = temp;
+        data.chats = chat;
+        ref.ref('/User/'+uid+'/').update(data)
+        .then(()=>{
+          ref.ref('/User/'+user?.uid+'/').update({friends:tempFriends, chats:chats})
+          .then(()=>{
+            loadData();
+            setLoading(false)
+          })
+          .catch(error=>{
+            setLoading(false)
+            alert(error.message)
+          })
+        })
+        .catch((error)=>{
+          setLoading(false);
+          alert(error.message)
+        })
+      })
+    })
+    .catch(error=>{
+      setLoading(false)
+      alert(error.message)
+    })
+  }
+
+
   if(isLoading){
     return(
       <Loading/>
@@ -77,7 +129,10 @@ React.useEffect(()=>{
                     </Body>
                    </Left>
                    <Right>
-                     <Button bordered style={{borderRadius:10}}>
+                     <Button
+                      bordered style={{borderRadius:10}}
+                      onPress={()=>add(value.uid)}
+                      >
                        <Text>Add</Text>
                      </Button>
                    </Right>

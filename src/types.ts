@@ -26,7 +26,23 @@ export type User ={
     lname?:string;
     gender?:string;
     phone?:string;
-    chats?:Array<string>;
-    friends?:Array<string>;
+    chats?:Array<string|null>;
+    friends?:Array<string|undefined>;
 }
 
+export type Chat = {
+    id?:string;
+    users?:Array<string|undefined>;
+    messages?:Array<Message>;
+}
+export type ChatUser = {
+    _id?:string;
+    name?:string;
+    avatar?:string;
+}
+export type Message = {
+    _id?:string;
+    txt:string;
+    createdAt:string;
+    user:ChatUser;
+}
