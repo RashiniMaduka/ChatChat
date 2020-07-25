@@ -53,9 +53,7 @@ function TabOne(){
             <TabOneStack.Screen
              name='ChatView'
              component={ChatView}
-             options={{
-                 title:''
-             }}
+             options={({route})=>({ title: route.params.title })}
             />
             <TabOneStack.Screen
              name='AddChat' 

@@ -9,7 +9,7 @@ export type BottomTabParamList={
 }
 export type TabOneParamList={
     ChatList:undefined;
-    ChatView:{chatId:string};
+    ChatView:{chatId?:string|null, title:string};
     AddChat:undefined;
 }
 export type TabTwoParamList={
@@ -31,18 +31,18 @@ export type User ={
 }
 
 export type Chat = {
-    id?:string;
+    id?:string|null;
     users?:Array<string|undefined>;
-    messages?:Array<Message>;
+    messages:Array<Message>;
 }
 export type ChatUser = {
-    _id?:string;
-    name?:string;
-    avatar?:string;
+    _id:string;
+    name:string;
+    avatar:string;
 }
 export type Message = {
-    _id?:string;
-    txt:string;
-    createdAt:string;
+    _id:string;
+    text:string;
+    createdAt:Date;
     user:ChatUser;
 }
