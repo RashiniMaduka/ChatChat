@@ -19,6 +19,7 @@ const ChatView = (props: Props) => {
   const user = firebase.auth().currentUser;
   const ref = firebase.database();
   let chatId = props.route.params.chatId;
+  const myImage = props.route.params.myImage;
   const msg = {
     _id: '1',
     text: 'Hello developer',
@@ -58,7 +59,7 @@ const ChatView = (props: Props) => {
       user={{
         _id: user?.uid?user.uid:'1',
         name:user?.displayName?user?.displayName:'',
-        avatar:"https://notednames.com/ImgProfile/hkoh_Amy%20Acker.jpg"
+        avatar:myImage,
       }}
     />
   );

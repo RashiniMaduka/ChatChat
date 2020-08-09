@@ -9,14 +9,16 @@ export type BottomTabParamList={
 }
 export type TabOneParamList={
     ChatList:undefined;
-    ChatView:{chatId?:string|null, title:string};
+    ChatView:{chatId?:string|null, title:string, myImage:string};
     AddChat:undefined;
 }
 export type TabTwoParamList={
     Profile:undefined;
+    EditProfile:undefined;
+    ProfileSetting:undefined;
 }
 export type TabThreeParamList={
-    NewFriends:undefined;
+    Home:undefined;
 }
 
 export type User ={
@@ -28,6 +30,9 @@ export type User ={
     phone?:string;
     chats?:Array<string|null>;
     friends?:Array<string|undefined>;
+    photoUrl?:string;
+    coverPhotoUrl?:string;
+    tittle?:string;
 }
 
 export type Chat = {

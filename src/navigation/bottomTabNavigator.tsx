@@ -2,32 +2,42 @@ import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from '../types';
+import { BottomTabParamList, TabOneParamList, TabTwoParamList,TabThreeParamList } from '../types';
 import { ChatList, ChatView, AddChat } from '../screens/Chat';
 import Profile from '../screens/Profile';
 import Color from '../constants/Color';
-import NewFriends from '../screens/NewFriends';
+import EditProfile from '../screens/EditProfile';
+import ProfileSetting from '../screens/ProfileSettings';
+import Home from '../screens/Home';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator(){
     return(
-        <BottomTab.Navigator
+        <BottomTab.Navigator 
+        initialRouteName='TabThree'
          tabBarOptions={{activeTintColor:Color.tintColorLight}}>
             <BottomTab.Screen
              name='TabOne' 
              component={TabOne}
-             options={{tabBarIcon:({color})=><TabBarIcon name='ios-chatbubbles' color={color}/>}}
+             options={{
+            tabBarLabel:'Chats',
+             tabBarIcon:({color})=><TabBarIcon name='ios-chatbubbles' color={color}/>}}
+             
              />
             <BottomTab.Screen
              name='TabTwo' 
              component={TabTwo}
-             options={{tabBarIcon:({color})=><TabBarIcon name='ios-person' color={color}/>}}
+             options={{
+                tabBarLabel:'Profile',
+                tabBarIcon:({color})=><TabBarIcon name='md-person' color={color}/>}}
              />
-             <BottomTab.Screen
+              <BottomTab.Screen
              name='TabThree' 
              component={TabThree}
-             options={{tabBarIcon:({color})=><TabBarIcon name='ios-person' color={color}/>}}
+             options={{
+                tabBarLabel:'Home',
+                tabBarIcon:({color})=><TabBarIcon name='md-home' color={color}/>}}
              />
         </BottomTab.Navigator>
     );
@@ -41,7 +51,7 @@ const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOne(){
     return(
-        <TabOneStack.Navigator>
+        <TabOneStack.Navigator initialRouteName='ChatList'>
             <TabOneStack.Screen
              name='ChatList' 
              component={ChatList}
@@ -71,15 +81,18 @@ const TabTwoStack = createStackNavigator<TabTwoParamList>();
 function TabTwo(){
     return(
         <TabTwoStack.Navigator>
-            <TabTwoStack.Screen name='Profile' component={Profile}/>
+            <TabTwoStack.Screen name='Profile' component={Profile} options={{title:'Profile', headerTitleContainerStyle:{alignItems: 'center',}}}/>
+            <TabTwoStack.Screen name='EditProfile' component={EditProfile} options={{title:'Edit Profile'}}/>
+            <TabTwoStack.Screen name='ProfileSetting' component={ProfileSetting} options={{title:'Setting', headerTitleContainerStyle:{alignItems: 'center',}}}/>
         </TabTwoStack.Navigator>
     );
 }
-const TabThreeStack = createStackNavigator<TabThreeParamList>();
+
+const TabThreeStack=createStackNavigator<TabThreeParamList>();
 function TabThree(){
     return(
         <TabThreeStack.Navigator>
-            <TabThreeStack.Screen name='NewFriends' component={NewFriends}/>
+            <TabThreeStack.Screen name='Home' component={Home} options={{title:'Home'}}/>
         </TabThreeStack.Navigator>
     );
 }

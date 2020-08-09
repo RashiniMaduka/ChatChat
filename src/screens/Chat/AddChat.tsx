@@ -45,9 +45,10 @@ React.useEffect(()=>{
           let tempUser:User = userData[key];
           tempUser.uid = key;
           setUserList(prevState=>[...prevState,tempUser])
-          setLoading(false);
+          
         }
       }
+      setLoading(false);
     })
     .catch((error)=>{
       setLoading(false);
@@ -66,6 +67,7 @@ React.useEffect(()=>{
       tempFriends = tempFriends?[...tempFriends,uid]:[uid];
       const newChat:Chat = {
         users:[user?.uid,uid],
+        messages:[]
       }
       const chatId = ref.ref('/Chat/').push(newChat)
       

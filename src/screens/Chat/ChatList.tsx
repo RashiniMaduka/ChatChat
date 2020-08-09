@@ -47,6 +47,7 @@ const ChatList = (props: Props) => {
   const [chats, setChats] = React.useState<Array<Chat>>([]);
   const [userArray, setUser] = React.useState<Array<UserWithChatId>>([])
   const [isLoading, setLoading] = React.useState<boolean>(true);
+  const [myImage, setMyImage] = React.useState<string>('')
 
   React.useEffect(()=>{
     loadChats();
@@ -57,6 +58,13 @@ const ChatList = (props: Props) => {
 
   const loadChats = () => {
     setLoading(true);
+    ref.ref('/User/'+user?.uid+'/photoUrl').once('value')
+    .then(snapshot=>{
+      if(!snapshot.exists()){
+        setMyImage("https://firebasestorage.googleapis.com/v0/b/chatchat-39cfc.appspot.com/o/default_image%2Fdefault_person.png?alt=media&token=8b197ffa-0580-45eb-af10-1c803de0ffe6");
+      }
+      setMyImage(snapshot.val());
+    })
     ref.ref("/User/" + user?.uid + "/").on("value", (snapshot) => {
       setLoading(true);
       setChats([]);
@@ -127,13 +135,13 @@ const ChatList = (props: Props) => {
               <ListItem
                avatar 
                key={i}
-               onPress={()=>props.navigation.push('ChatView',{chatId:value.chatId,title:value.user.fname+" "+value.user.lname})}
+               onPress={()=>props.navigation.push('ChatView',{chatId:value.chatId,title:value.user.fname+" "+value.user.lname, myImage:myImage})}
               >
               <Left>
                 <Thumbnail
                   source={{
                     uri:
-                      "https://notednames.com/ImgProfile/hkoh_Amy%20Acker.jpg",
+                      value.user.photoUrl,
                   }}
                 />
               </Left>
@@ -151,6 +159,7 @@ const ChatList = (props: Props) => {
         </List>
       </Content>
       <FloatingAction
+        color = {Color.NAVYBLUE}
         floatingIcon={<Icon name="md-add" style={{ color: Color.WHITE }} />}
         onPressMain={() => props.navigation.push("AddChat")}
         showBackground={false}
