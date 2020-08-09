@@ -22,7 +22,7 @@ export default function BottomTabNavigator(){
              component={TabOne}
              options={{
             tabBarLabel:'Chats',
-             tabBarIcon:({color})=><TabBarIcon name='ios-chatbubbles' color={color}/>}}
+             tabBarIcon:({color})=><TabBarIcon name='md-chatbubbles' color={color}/>}}
              
              />
             <BottomTab.Screen
@@ -83,7 +83,7 @@ function TabTwo(){
         <TabTwoStack.Navigator>
             <TabTwoStack.Screen name='Profile' component={Profile} options={{title:'Profile', headerTitleContainerStyle:{alignItems: 'center',}}}/>
             <TabTwoStack.Screen name='EditProfile' component={EditProfile} options={{title:'Edit Profile'}}/>
-            <TabTwoStack.Screen name='ProfileSetting' component={ProfileSetting} options={{title:'Setting', headerTitleContainerStyle:{alignItems: 'center',}}}/>
+            <TabTwoStack.Screen name='ProfileSetting' component={ProfileSetting} options={{title:'Logout', headerTitleContainerStyle:{alignItems: 'center',}}}/>
         </TabTwoStack.Navigator>
     );
 }

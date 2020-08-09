@@ -49,7 +49,7 @@ const Profile = (props: Props) => {
 
   const actions = [
     {
-      text: "setting",
+      text: "LogOut",
       icon: <Icon name='settings' type='Ionicons' style={{color:Color.WHITE}}/>,
       name: "bt_1",
       position: 1,
@@ -57,7 +57,7 @@ const Profile = (props: Props) => {
       color:Color.NAVYBLUE,
     },
     {
-      text: "edit",
+      text: "Edit",
       icon: <Icon name='md-create' type='Ionicons' style={{color:Color.WHITE}}/>,
       name: "bt_2",
       position: 2,
